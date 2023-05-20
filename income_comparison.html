@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Income Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      canvas {
+        max-width: 600px;
+        margin: 20px auto;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Income Chart</h1>
+    <p>Select your income range:</p>
+    <select id="income-range">
+      <option value="0-1999">1999 and below</option>
+      <option value="2000-2999">2000-2999</option>
+      <option value="3000-3999">3000-3999</option>
+      <option value="4000-4999">4000-4999</option>
+      <option value="5000-5999">5000-5999</option>
+      <option value="6000-6999">6000-6999</option>
+      <option value="7000-7999">7000-7999</option>
+      <option value="8000-8999">8000-8999</option>
+      <option value="9000-9999">9000-9999</option>
+      <option value="10000-10999">10000-10999</option>
+      <option value="11000-11999">11000-11999</option>
+      <option value="12000-12999">12000-12999</option>
+      <option value="13000-13999">13000-13999</option>
+      <option value="14000-14999">14000-14999</option>
+      <option value="15000 and above">15000 and above</option>
+    </select>
+    <canvas id="income-chart"></canvas>
+
+    <script>
+      // Dataset of income ranges and their corresponding percentages
+      const incomeDataset = [
+        { range: '1999 and below', percentage: 5 },
+        { range: '2000-2999', percentage: 10 },
+        { range: '3000-3999', percentage: 10 },
+        { range: '4000-4999', percentage: 15 },
+        { range: '5000-5999', percentage: 20 },
+        { range: '6000-6999', percentage: 25 },
+        { range: '7000-7999', percentage: 20 },
+        { range: '8000-8999', percentage: 15 },
+        { range: '9000-9999', percentage: 12 },
+        { range: '10000-10999', percentage: 10 },
+        { range: '11000-11999', percentage: 9 },
+        { range: '12000-12999', percentage: 8 },
+        { range: '13000-13999', percentage: 7 },
+        { range: '14000-14999', percentage: 6 },
+        { range: '15000 and above', percentage: 7 }
+      ]
+
+      const incomeRangeSelect = document.getElementById('income-range')
+      const incomeChart = document.getElementById('income-chart')
+
+      const drawChart = selectedRange => {
+        const selectedPercentage = incomeDataset.find(
+          data => data.range === selectedRange
+        ).percentage
+        const chartData = incomeDataset.map(data => data.percentage)
+        const labels = incomeDataset.map(data => data.range)
+
+        const highlightedColor = '#ff0000'
+        const defaultColor = '#0000ff'
+
+        const colors = labels.map(label =>
+          label === selectedRange ? highlightedColor : defaultColor
+        )
+
+        new Chart(incomeChart, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Income Percentage',
+                data: chartData,
+                backgroundColor: colors
+              }
+            ]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 30,
+                title: {
+                  display: true,
+                  text: 'Percentage (%)'
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        })
+      }
+
+      incomeRangeSelect.addEventListener('change', event => {
+        const selectedRange = event.target.value
+        drawChart(selectedRange)
+      })
+
+      // Initial chart drawing with the default selection
+      drawChart(incomeRangeSelect.value)
+    </script>
+  </body>
+</html>
